@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Challenge DSPLAY - Kennedy</title>
+	<link rel="stylesheet" href="./css/bootstrap.css">
+	<link rel="stylesheet" href="./css/mycss/mycss.css">
+</head>
+<body>
+
+	<div class="container" id="app">
+
+		<!-- Input/Submit -->
+		<div class="row search">
+			<div>
+				<form @submit.prevent="onSubmit">
+					<div class="input-group mb-3">
+					  <input type="text" class="form-control" placeholder="Type here the instagram token" aria-label="Recipient's username" aria-describedby="button-addon2" v-model:value="token">
+					  <button class="btn btn-primary" type="submit" id="button-addon2">Seach</button>
+					</div>				
+				</form>
+			</div>	 
+		</div>
+		<!-- Fim  do Input/Submit -->
+
+
+		<!-- Título -->
+		<div class="row " v-if="length">			
+			<h2> Now you can see the {{ length }} last post from user </h2>
+		</div>
+		<!-- Fim do Título -->
+		
+
+		<!-- Medias -->
+		<div class="row" v-if="length">
+			<div class="col-sm-12">
+				<div v-for="data in datas">
+					<div class="card mycard">									
+						<img :src="data.media_url"><br>
+						{{ data.caption }} <br>
+						{{ data.timestamp }} <br>
+						<a :href="data.permalink">See on Instagram</a>
+
+					</div>		
+				</div>
+			</div>
+		</div>
+		<!-- Fim das Medias -->
+
+	</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+ new Vue({
+	
+	el: '#app',
+	data: {
+		token: '',
+		datas: {},
+		length: ''
+	},
+	methods: {
+		onSubmit (){
+			  axios.get('https://challenge-dsplay-back.herokuapp.com/public/api/dados?token=' + this.token)
+						.then(response =>{
+
+							this.datas = response.data.data,
+							this.length = this.datas.length
+							//console.log(response.data.data)
+						},error => console.log(error))	
+										
+		}
+
+	}
+})
+
+</script>
+</body>
+</html>
